@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Aid Guardian AI</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="brand">
+            <span class="brand-icon">🚑</span>
+            <span>First Aid Guardian</span>
+        </div>
+        <div class="header-right">
+            <button id="speaker-toggle" class="theme-toggle-btn" title="Toggle Voice Output">🔇</button>
+            <button id="new-case-btn" class="theme-toggle-btn" title="New Case">🆕</button>
+            <button id="theme-toggle" class="theme-toggle-btn" title="Toggle Theme">🌙</button>
+            <input type="password" id="api-key-input" class="api-key-input" placeholder="Enter Gemini API Key">
+            <select id="language-select" class="language-select">
+                <option value="English">English</option>
+                <option value="Hindi">Hindi (हिन्दी)</option>
+                <option value="Bengali">Bengali (বাংলা)</option>
+                <option value="Marathi">Marathi (मराठी)</option>
+                <option value="Telugu">Telugu (తెలుగు)</option>
+                <option value="Tamil">Tamil (தமிழ்)</option>
+                <option value="Gujarati">Gujarati (ગુજરાતી)</option>
+                <option value="Kannada">Kannada (ಕನ್ನಡ)</option>
+                <option value="Malayalam">Malayalam (മലയാളం)</option>
+            </select>
+            <div class="status">
+                <span style="color: #22c55e; font-size: 0.875rem; font-weight: 500;">● Online</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="mesh-container"></div>
+    <main class="dashboard-grid">
+        <!-- Left Panel: Actions & Discovery -->
+        <aside class="panel left-panel">
+            <div class="panel-section upper-actions">
+                <div class="panel-header">
+                    <h3>📋 Emergency Procedures</h3>
+                </div>
+                <div id="actions-content" class="panel-content">
+                    <div class="empty-state">Procedural steps will appear here.</div>
+                </div>
+            </div>
+
+            <div class="panel-section bottom-discovery">
+                <div class="panel-header">
+                    <h3>⚕️ Doctor's Inventory</h3>
+                </div>
+                <div id="inventory-list" class="panel-content inventory-list">
+                    <!-- Inventory items will be loaded here -->
+                </div>
+                <div class="inventory-controls">
+                    <input type="text" id="inventory-input" placeholder="Add medicine/equipment...">
+                    <button id="add-inventory-btn">Add</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Center Panel: Chat -->
+        <section class="panel chat-panel">
+            <div id="chat-container" class="chat-container">
+                <div class="message assistant doctor-msg">
+                    <div class="avatar doctor-avatar">🩺</div>
+                    <div class="message-content">
+                        Hello. I am <b>Dr. Guardian</b>. <br>
+                        I am here to guide you through this emergency. Please stay calm and describe what happened, or
+                        upload a clear photo of the injury.
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <button id="toggle-patient-data" class="toggle-btn">📋 Manage Patient Details</button>
+                <div id="patient-data-form" class="patient-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Age</label>
+                            <input type="text" id="patient-age" placeholder="e.g. 10 years">
+                        </div>
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <select id="patient-gender">
+                                <option value="N/A">Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Location</label>
+                            <input type="text" id="patient-location" placeholder="e.g. Playground">
+                        </div>
+                        <div class="form-group">
+                            <label>Duration</label>
+                            <input type="text" id="patient-duration" placeholder="e.g. 15m ago">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="preview-container">
+                    <img id="preview-image" class="preview-image" alt="Preview">
+                    <span id="remove-image" class="remove-image">Remove</span>
+                </div>
+
+                <div class="input-container">
+                    <input type="file" id="file-input" accept="image/*" style="display: none;">
+                    <button id="camera-btn" title="Open Camera">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z">
+                            </path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                    </button>
+                    <button id="image-upload-btn" title="Upload Image">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                            <circle cx="8.5" cy="8.5" r="1.5" />
+                            <polyline points="21 15 16 10 5 21" />
+                        </svg>
+                    </button>
+                    <textarea id="message-input" placeholder="Describe the emergency..." rows="1"></textarea>
+                    <button id="send-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13" />
+                            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                        </svg>
+                    </button>
+                    <button id="mic-btn" style="background: var(--surface); color: var(--primary);">
+                        <svg class="mic-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                            <line x1="12" y1="19" x2="12" y2="23"></line>
+                            <line x1="8" y1="23" x2="16" y2="23"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Panel: Visualization -->
+        <aside class="panel right-panel">
+            <div class="panel-header">
+                <h3>🧒 Patient Visualization</h3>
+            </div>
+            <div class="patient-info-summary">
+                <span id="display-age" class="info-tag">Age: N/A</span>
+                <span id="display-gender" class="info-tag">Gender: N/A</span>
+            </div>
+            <div id="body-viz-container" class="viz-content">
+                <!-- Human Body SVG -->
+                <svg id="human-body" viewBox="0 0 200 500" class="human-body-svg">
+                    <defs>
+                        <filter id="glow">
+                            <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
+                            <feMerge>
+                                <feMergeNode in="coloredBlur" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    <!-- Base Body Recalibrated -->
+                    <path
+                        d="M100,20 C85,20 75,35 75,50 C75,65 85,80 100,80 C115,80 125,65 125,50 C125,35 115,20 100,20 Z"
+                        fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" /> <!-- Head -->
+                    <path d="M70,80 L130,80 L135,210 C135,215 130,220 125,220 L75,220 C70,220 65,215 65,210 Z"
+                        fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" /> <!-- Torso -->
+                    <rect x="42" y="85" width="22" height="130" rx="11" fill="#f8fafc" stroke="#94a3b8" />
+                    <!-- L Arm -->
+                    <rect x="136" y="85" width="22" height="130" rx="11" fill="#f8fafc" stroke="#94a3b8" />
+                    <!-- R Arm -->
+                    <rect x="72" y="225" width="25" height="230" rx="12" fill="#f8fafc" stroke="#94a3b8" />
+                    <!-- L Leg -->
+                    <rect x="103" y="225" width="25" height="230" rx="12" fill="#f8fafc" stroke="#94a3b8" />
+                    <!-- R Leg -->
+
+                    <!-- Recalibrated Spots (INSIDE only) -->
+                    <g id="body-spots" class="body-spots">
+                        <circle data-id="1" cx="100" cy="35" r="4" class="spot-node" title="Top of Head" />
+                        <circle data-id="2" cx="100" cy="50" r="4" class="spot-node" title="Forehead" />
+                        <circle data-id="3" cx="100" cy="62" r="4" class="spot-node" title="Face/Eyes" />
+                        <circle data-id="4" cx="100" cy="72" r="4" class="spot-node" title="Mouth/Jaw" />
+                        <circle data-id="5" cx="100" cy="85" r="4" class="spot-node" title="Neck" />
+                        <circle data-id="6" cx="75" cy="95" r="4" class="spot-node" title="Left Shoulder" />
+                        <circle data-id="7" cx="125" cy="95" r="4" class="spot-node" title="Right Shoulder" />
+                        <circle data-id="8" cx="100" cy="115" r="4" class="spot-node" title="Chest Center" />
+                        <circle data-id="9" cx="85" cy="115" r="4" class="spot-node" title="Left Chest" />
+                        <circle data-id="10" cx="115" cy="115" r="4" class="spot-node" title="Right Chest" />
+                        <circle data-id="11" cx="100" cy="155" r="4" class="spot-node" title="Upper Abdomen" />
+                        <circle data-id="12" cx="100" cy="185" r="4" class="spot-node" title="Lower Abdomen" />
+                        <circle data-id="13" cx="53" cy="125" r="4" class="spot-node" title="Left Upper Arm" />
+                        <circle data-id="14" cx="147" cy="125" r="4" class="spot-node" title="Right Upper Arm" />
+                        <circle data-id="15" cx="53" cy="175" r="4" class="spot-node" title="Left Elbow" />
+                        <circle data-id="16" cx="147" cy="175" r="4" class="spot-node" title="Right Elbow" />
+                        <circle data-id="17" cx="53" cy="210" r="4" class="spot-node" title="Left Forearm" />
+                        <circle data-id="18" cx="147" cy="210" r="4" class="spot-node" title="Right Forearm" />
+                        <circle data-id="19" cx="53" cy="245" r="4" class="spot-node" title="Left Hand" />
+                        <circle data-id="20" cx="147" cy="245" r="4" class="spot-node" title="Right Hand" />
+                        <circle data-id="21" cx="84" cy="235" r="4" class="spot-node" title="Left Hip" />
+                        <circle data-id="22" cx="116" cy="235" r="4" class="spot-node" title="Right Hip" />
+                        <circle data-id="23" cx="84" cy="285" r="4" class="spot-node" title="Left Thigh" />
+                        <circle data-id="24" cx="116" cy="285" r="4" class="spot-node" title="Right Thigh" />
+                        <circle data-id="25" cx="84" cy="355" r="4" class="spot-node" title="Left Knee" />
+                        <circle data-id="26" cx="116" cy="355" r="4" class="spot-node" title="Right Knee" />
+                        <circle data-id="27" cx="84" cy="405" r="4" class="spot-node" title="Left Lower Leg" />
+                        <circle data-id="28" cx="116" cy="405" r="4" class="spot-node" title="Right Lower Leg" />
+                        <circle data-id="29" cx="84" cy="455" r="4" class="spot-node" title="Left Foot" />
+                        <circle data-id="30" cx="116" cy="455" r="4" class="spot-node" title="Right Foot" />
+                    </g>
+
+                    <!-- Solid Indicator -->
+                    <circle id="target-indicator-solid" cx="0" cy="0" r="8" fill="rgba(239, 68, 68, 0.6)"
+                        style="visibility: hidden;" filter="url(#glow)" />
+                </svg>
+                <div id="active-part-display" class="active-part-label">All Systems Normal</div>
+            </div>
+        </aside>
+    </main>
+    <!-- Camera Modal -->
+    <div id="camera-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <video id="video" width="100%" autoplay></video>
+            <canvas id="canvas" style="display:none;"></canvas>
+            <button id="capture-btn" class="primary-btn">Capture Photo</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

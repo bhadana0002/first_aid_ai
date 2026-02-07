@@ -1,0 +1,260 @@
+{
+    "metadata": {
+        "syllabus": "ICELS (Simulated)",
+        "version": "2.0",
+        "description": "School First Aid Protocols Class 1-12"
+    },
+    "protocols": [
+        {
+            "id": "minor_cuts",
+            "keywords": [
+                "cut",
+                "scratch",
+                "graze",
+                "bleeding",
+                "wound",
+                "knee"
+            ],
+            "grade_level": "1-5",
+            "title": "Minor Cuts & Grazes",
+            "steps": [
+                "Wash your hands before touching the wound.",
+                "Clean the wound with clean water or an antiseptic wipe.",
+                "Pat the area dry with a clean tissue/gauze (do not rub).",
+                "Apply a sterile adhesive dressing (plaster)."
+            ],
+            "red_flags": [
+                "Heavy bleeding",
+                "Glass/object inside wound"
+            ]
+        },
+        {
+            "id": "nosebleed",
+            "keywords": [
+                "nose",
+                "bleed",
+                "blood",
+                "nosebleed"
+            ],
+            "grade_level": "1-5",
+            "title": "Nosebleed",
+            "steps": [
+                "Sit the student down.",
+                "Tilt head FORWARD (looking at lap). NOT back.",
+                "Pinch the soft part of the nose just below the bone.",
+                "Have them breathe through their mouth.",
+                "Hold pinch for 10 minutes."
+            ],
+            "red_flags": [
+                "Bleeding > 20 mins",
+                "Injury to head"
+            ]
+        },
+        {
+            "id": "insect_bite",
+            "keywords": [
+                "bee",
+                "wasp",
+                "sting",
+                "bite",
+                "insect",
+                "spider"
+            ],
+            "grade_level": "1-5",
+            "title": "Insect Bites & Stings",
+            "steps": [
+                "Remove the sting if visible (scrape it out, don't squeeze).",
+                "Wash the area with soap and water.",
+                "Apply a cold compress (ice pack wrapped in cloth) for 10 mins.",
+                "Monitor for allergic reaction."
+            ],
+            "red_flags": [
+                "Swelling of face/lips",
+                "Difficulty breathing (Anaphylaxis) -> CALL 112"
+            ]
+        },
+        {
+            "id": "burns",
+            "keywords": [
+                "burn",
+                "scald",
+                "fire",
+                "hot",
+                "steam"
+            ],
+            "grade_level": "6-8",
+            "title": "Burns & Scalds",
+            "steps": [
+                "Move away from the heat source.",
+                "Run COOL/TEPID running water over the burn for 20 minutes immediately.",
+                "Remove jewelry/clothing near burn (unless stuck to skin).",
+                "Cover with cling film or sterile non-fluffy dressing."
+            ],
+            "red_flags": [
+                "Burn is larger than palm",
+                "Facial burns",
+                "Chemical burn"
+            ]
+        },
+        {
+            "id": "choking",
+            "keywords": [
+                "choking",
+                "can't breathe",
+                "swallowed",
+                "food stuck"
+            ],
+            "grade_level": "6-8",
+            "title": "Choking",
+            "steps": [
+                "Ask: 'Are you choking?'",
+                "If they can cough, encourage coughing.",
+                "If silent: Give 5 Back Blows (between shoulder blades).",
+                "If no success: Give 5 Abdominal Thrusts (pull in and up above navel).",
+                "Repeat cycle."
+            ],
+            "red_flags": [
+                "Unconscious -> Start CPR"
+            ]
+        },
+        {
+            "id": "fainting",
+            "keywords": [
+                "faint",
+                "collapse",
+                "dizzy",
+                "unconscious",
+                "passed out"
+            ],
+            "grade_level": "6-8",
+            "title": "Fainting",
+            "steps": [
+                "Lay the person flat on their back.",
+                "Raise legs above heart level (approx 30cm).",
+                "Loosen tight clothing (collar, belt).",
+                "Ensure fresh air supply."
+            ],
+            "red_flags": [
+                "Not waking up > 2 mins -> Recovery Position & Call 112"
+            ]
+        },
+        {
+            "id": "head_injury",
+            "keywords": [
+                "head check",
+                "concussion",
+                "hit head",
+                "bump",
+                "fell"
+            ],
+            "grade_level": "6-8",
+            "title": "Head Injury (Concussion)",
+            "steps": [
+                "Sit them down and apply a cold compress to the bump.",
+                "Monitor for signs of concussion: dizziness, vomiting, confusion.",
+                "Do not let them return to sport/play."
+            ],
+            "red_flags": [
+                "Vomiting",
+                "Severe headache",
+                "Loss of consciousness -> CALL 112"
+            ]
+        },
+        {
+            "id": "cpr",
+            "keywords": [
+                "cpr",
+                "heart",
+                "not breathing",
+                "cardiac",
+                "dying",
+                "arrest"
+            ],
+            "grade_level": "9-12",
+            "title": "CPR (Cardiopulmonary Resuscitation)",
+            "steps": [
+                "DANGER: Check area safety.",
+                "RESPONSE: Shake shoulders, shout 'Hello?'",
+                "AIRWAY: Tilt head back.",
+                "BREATHING: Look, listen, feel for 10s. If NOT breathing normally...",
+                "CALL 112/Ambulance.",
+                "COMPRESSIONS: Center of chest, interlocked hands. Push hard and fast (2 per second). Depth 5-6cm.",
+                "BREATHS: 30 compressions then 2 rescue breaths (if trained). Otherwise Hands-Only.",
+                "Continue until help arrives."
+            ],
+            "red_flags": [
+                "Do not stop until paramedic takes over"
+            ]
+        },
+        {
+            "id": "fracture",
+            "keywords": [
+                "broken",
+                "bone",
+                "fracture",
+                "arm",
+                "leg",
+                "pain",
+                "snap"
+            ],
+            "grade_level": "9-12",
+            "title": "Bone Fractures",
+            "steps": [
+                "Support the injury with hand or sling.",
+                "Immobilize the area (do not try to straighten).",
+                "Cover open wounds with sterile dressing.",
+                "Transport to hospital."
+            ],
+            "red_flags": [
+                "Bone sticking out",
+                "Neck/Back injury -> DO NOT MOVE"
+            ]
+        },
+        {
+            "id": "seizure",
+            "keywords": [
+                "seizure",
+                "fit",
+                "convulsion",
+                "shaking",
+                "epilepsy"
+            ],
+            "grade_level": "9-12",
+            "title": "Seizures",
+            "steps": [
+                "Protect head with cushion/coat.",
+                "Remove dangerous objects nearby.",
+                "Note the time the seizure starts.",
+                "Do NOT restrain.",
+                "Do NOT put anything in mouth.",
+                "After shaking stops, place in Recovery Position."
+            ],
+            "red_flags": [
+                "Seizure > 5 mins -> Call 112"
+            ]
+        },
+        {
+            "id": "anaphylaxis",
+            "keywords": [
+                "allergy",
+                "allergic",
+                "peanut",
+                "swollen",
+                "epi-pen",
+                "anaphylaxis"
+            ],
+            "grade_level": "9-12",
+            "title": "Severe Allergic Reaction (Anaphylaxis)",
+            "steps": [
+                "Lay victim smooth. If breathing is difficult, allow to sit.",
+                "Administer Adrenaline Auto-Injector (EpiPen) immediately if available.",
+                "Call 112 immediately tailored for 'Anaphylaxis'.",
+                "If no improvement in 5 mins, give second dose."
+            ],
+            "red_flags": [
+                "Airway closing",
+                "Shock"
+            ]
+        }
+    ]
+}
