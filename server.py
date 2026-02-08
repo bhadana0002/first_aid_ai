@@ -1,7 +1,14 @@
 from flask import Flask, request, jsonify, send_from_directory
-import core
 from PIL import Image
 import io
+import sys
+import os
+
+# Ensure the app can find modules in the current and subdirectories
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'first_aid_ai'))
+
+import core
 
 app = Flask(__name__, static_folder='static', static_url_path='')
 

@@ -34,7 +34,9 @@ key_manager = KeyManager()
 
 def load_knowledge_base():
     try:
-        with open('knowledge_base.json', 'r') as f:
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.join(base_dir, 'knowledge_base.json')
+        with open(path, 'r') as f:
             return json.load(f)
     except Exception as e:
         print(f"Error loading knowledge base: {e}")
@@ -42,7 +44,9 @@ def load_knowledge_base():
 
 def load_inventory():
     try:
-        with open('inventory.json', 'r') as f:
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.join(base_dir, 'inventory.json')
+        with open(path, 'r') as f:
             return json.load(f)
     except Exception:
         return {"medicines": [], "equipment": []}
