@@ -14,7 +14,7 @@ app = Flask(__name__, static_folder='first_aid_ai/static', static_url_path='')
 
 @app.route('/')
 def index():
-    return send_from_directory('static', 'index.html')
+    return send_from_directory(app.static_folder, 'index.html')
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
@@ -54,7 +54,7 @@ def chat():
 @app.route('/api/inventory', methods=['GET', 'POST'])
 def inventory():
     import json
-    path = 'inventory.json'
+    path = 'first_aid_ai/inventory.json'
     if request.method == 'GET':
         try:
             with open(path, 'r') as f:
