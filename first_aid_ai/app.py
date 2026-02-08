@@ -2,6 +2,58 @@ import streamlit as st
 import json
 import google.generativeai as genai
 import os
+from PIL import Image
+
+# Theme Support (Dark/Light Mode)
+def setup_theme():
+    if "theme" not in st.session_state:
+        st.session_state.theme = "light"
+    
+    theme_icon = "🌙" if st.session_state.theme == "light" else "☀️"
+    if st.sidebar.button(f"{theme_icon} Toggle Theme"):
+        st.session_state.theme = "dark" if st.session_state.theme == "light" else "light"
+        st.rerun()
+
+    if st.session_state.theme == "dark":
+        st.markdown("""
+            <style>
+                .stApp {
+                    background-color: #0e1117;
+                    color: #ffffff;
+                }
+                .stSidebar {
+                    background-color: #161b22;
+                }
+                /* Premium Glassmorphism for Dark Mode */
+                div[data-testid="stChatMessage"] {
+                    background: rgba(255, 255, 255, 0.05);
+                    border-radius: 10px;
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    margin-bottom: 10px;
+                }
+                div[data-testid="stChatInput"] {
+                    background: #161b22;
+                    border-top: 1px solid #30363d;
+                }
+            </style>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown("""
+            <style>
+                .stApp {
+                    background-color: #f8f9fa;
+                    color: #212529;
+                }
+                div[data-testid="stChatMessage"] {
+                    background: #ffffff;
+                    border-radius: 10px;
+                    border: 1px solid #e9ecef;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                    margin-bottom: 10px;
+                }
+            </style>
+        """, unsafe_allow_html=True)
+
 
 # Page Config
 st.set_page_config(
@@ -105,57 +157,10 @@ with st.sidebar:
 
     setup_theme()
 
-from PIL import Image
 
 # Theme Support (Dark/Light Mode)
-def setup_theme():
-    if "theme" not in st.session_state:
-        st.session_state.theme = "light"
-    
-    theme_icon = "🌙" if st.session_state.theme == "light" else "☀️"
-    if st.sidebar.button(f"{theme_icon} Toggle Theme"):
-        st.session_state.theme = "dark" if st.session_state.theme == "light" else "light"
-        st.rerun()
+# Moved to top
 
-    if st.session_state.theme == "dark":
-        st.markdown("""
-            <style>
-                .stApp {
-                    background-color: #0e1117;
-                    color: #ffffff;
-                }
-                .stSidebar {
-                    background-color: #161b22;
-                }
-                /* Premium Glassmorphism for Dark Mode */
-                div[data-testid="stChatMessage"] {
-                    background: rgba(255, 255, 255, 0.05);
-                    border-radius: 10px;
-                    border: 1px solid rgba(255, 255, 255, 0.1);
-                    margin-bottom: 10px;
-                }
-                div[data-testid="stChatInput"] {
-                    background: #161b22;
-                    border-top: 1px solid #30363d;
-                }
-            </style>
-        """, unsafe_allow_html=True)
-    else:
-        st.markdown("""
-            <style>
-                .stApp {
-                    background-color: #f8f9fa;
-                    color: #212529;
-                }
-                div[data-testid="stChatMessage"] {
-                    background: #ffffff;
-                    border-radius: 10px;
-                    border: 1px solid #e9ecef;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-                    margin-bottom: 10px;
-                }
-            </style>
-        """, unsafe_allow_html=True)
 
 # Main Logic
 if "messages" not in st.session_state:
