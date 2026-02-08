@@ -297,6 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
             removeLoading(loadingId);
 
             if (data.error) appendMessage(`Error: ${data.error}`, 'assistant');
+            else if (data.response === 'hello') appendMessage(`Hello! How can I help you today?`, 'assistant');
             else {
                 handleAIResponse(data.response);
                 // Add AI msg to history
