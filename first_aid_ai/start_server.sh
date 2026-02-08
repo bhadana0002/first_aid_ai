@@ -33,7 +33,7 @@ echo "    http://$IP_ADDR:5000"
 echo "----------------------------------------------------------------"
 
 # Run Flask in background to allow browser to open
-python3 server.py &
+python3 app.py &
 
 # Wait 2 seconds for server to initialize
 sleep 2

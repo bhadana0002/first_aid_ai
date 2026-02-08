@@ -10,7 +10,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'first_
 
 import core
 
-app = Flask(__name__, static_folder='static', static_url_path='')
+app = Flask(__name__, static_folder='first_aid_ai/static', static_url_path='')
 
 @app.route('/')
 def index():
