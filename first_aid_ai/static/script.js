@@ -282,8 +282,10 @@ document.addEventListener('DOMContentLoaded', () => {
     async function sendMessage() {
         const text = messageInput.value.trim();
         const manualKey = apiKeyInput.value.trim();
-        const pAge = document.getElementById('patient-age').value || 'N/A';
-        const pGender = document.getElementById('patient-gender').value || 'N/A';
+        const pAge = document.getElementById('patient-age')?.value || 'N/A';
+        const pGender = document.getElementById('patient-gender')?.value || 'N/A';
+        const pLocation = document.getElementById('patient-location')?.value || 'N/A';
+        const pDuration = document.getElementById('patient-duration')?.value || 'N/A';
 
         if (!text && !currentFile) return;
 
@@ -300,8 +302,8 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('api_key', manualKey);
         formData.append('age', pAge);
         formData.append('gender', pGender);
-        formData.append('location', document.getElementById('patient-location').value || 'N/A');
-        formData.append('duration', document.getElementById('patient-duration').value || 'N/A');
+        formData.append('location', pLocation);
+        formData.append('duration', pDuration);
         if (currentFile) formData.append('image', currentFile);
         formData.append('history', JSON.stringify(chatHistory));
 
@@ -311,11 +313,11 @@ document.addEventListener('DOMContentLoaded', () => {
         messageInput.value = '';
         messageInput.style.height = '44px';
         currentFile = null;
-        previewContainer.classList.remove('active');
+        if (previewContainer) previewContainer.classList.remove('active');
 
         const loadingId = appendLoading();
-        displayAge.textContent = `Age: ${pAge}`;
-        displayGender.textContent = `Gender: ${pGender}`;
+        if (displayAge) displayAge.textContent = `Age: ${pAge}`;
+        if (displayGender) displayGender.textContent = `Gender: ${pGender}`;
 
         try {
             const response = await fetch('/api/chat', { method: 'POST', body: formData });
