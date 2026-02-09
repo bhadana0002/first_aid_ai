@@ -32,15 +32,22 @@ def chat():
         }
 
         image_file = request.files.get('image')
-        history_str = request.form.get('history', '[]')
-        
         image = None
-        if image_file:
-            image = Image.open(image_file.stream)
+        if image_file and image_file.filename != '':
+            try:
+                image_data = image_file.read()
+                if image_data:
+                    image = Image.open(io.BytesIO(image_data))
+                    image.load() # Verify it's a real image
+                    print(f"Successfully loaded image: {image_file.filename}")
+            except Exception as img_err:
+                print(f"Warning: Could not process image {image_file.filename}: {img_err}")
+                image = None # Continue without image if it's invalid
 
         if not user_message and not image:
             return jsonify({"error": "No message or image provided"}), 400
 
+        print(f"Generating response for: {user_message[:50]}...")
         result = core.generate_response(user_message, image, language, patient_metadata, manual_api_key, history_str)
         
         if "error" in result:

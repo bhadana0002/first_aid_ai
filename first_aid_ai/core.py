@@ -51,7 +51,18 @@ def load_inventory():
     except Exception:
         return {"medicines": [], "equipment": []}
 
+def load_system_prompt():
+    try:
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.join(base_dir, 'system_prompt.md')
+        with open(path, 'r') as f:
+            return f.read()
+    except Exception as e:
+        print(f"Error loading system prompt: {e}")
+        return "You are First Aid Guardian, a professional emergency assistant."
+
 knowledge_base = load_knowledge_base()
+system_prompt_base = load_system_prompt()
 
 def get_relevant_context(query):
     """
@@ -101,7 +112,8 @@ def generate_response(user_query, image=None, language="English", patient_metada
     for attempt_key in api_keys_to_try:
         try:
             genai.configure(api_key=attempt_key)
-            model_name = 'gemini-flash-latest'
+            
+            model_name = 'gemini-1.5-flash'
             model = genai.GenerativeModel(model_name)
             
             # Load Inventory
@@ -110,15 +122,11 @@ def generate_response(user_query, image=None, language="English", patient_metada
             # --- Vision Analysis for better keywords ---
             if image:
                 try:
-                    vision_prompt = """
-                    Analyze this medical situation. 
-                    Identify the injury type and any visible tools/items.
-                    Return 3-5 keywords only.
-                    """
+                    vision_prompt = "Analyze this medical situation. Identify the injury type and any visible tools/items. Return 3-5 keywords only."
                     v_res = model.generate_content([vision_prompt, image])
                     user_query += f" (Visuals: {v_res.text})"
-                except:
-                    pass
+                except Exception as ve:
+                    print(f"Vision analysis failed: {ve}")
 
             # Format History Context
             history_context = ""
@@ -130,9 +138,9 @@ def generate_response(user_query, image=None, language="English", patient_metada
 
             system_prompt = [
                 f"""
-                PERSONA: You are Dr. Guardian, a senior school nurse and emergency first-aid expert. 
-                Your tone is professional, expert, and ultra-concise.
-                
+                {system_prompt_base}
+
+                --- TECHNICAL CONTEXT ---
                 {history_context}
 
                 AVAILABLE INVENTORY (Medicines & Equipment):
@@ -141,18 +149,11 @@ def generate_response(user_query, image=None, language="English", patient_metada
                 CONTEXT DATA: {json.dumps(matches, indent=2)}
 
                 PATIENT DETAILS:
-                - Age: {patient_metadata.get('age', 'N/A')}, Gender: {patient_metadata.get('gender', 'N/A')}, Location: {patient_metadata.get('location', 'N/A')}
+                - Age: {patient_metadata.get('age', 'N/A')},
+                Gender: {patient_metadata.get('gender', 'N/A')},
+                Location: {patient_metadata.get('location', 'N/A')},
+                Duration: {patient_metadata.get('duration', 'N/A')}
 
-                TASK:
-                1. Analyze visuals/query. 
-                2. Use the provided CONTEXT DATA for steps.
-                3. CROSS-REFERENCE with AVAILABLE INVENTORY. Tell the user what to use from inventory.
-                4. If a critical item is missing but needed (e.g. bandage, antiseptic), WARN specifically.
-                5. Be direct. No filler phrases.
-                6. REFER TO PREVIOUS STEPS (History) if relevant. Avoid repeating instructions already given.
-
-                SPOT MAP: 1: Head, 3: Face, 5: Neck, 8: Chest, 11: Abdomen, 13-18: Arms, 19-20: Hands, 21-28: Legs, 29-30: Feet
-                
                 FORMAT (MUST BE LAST LINES):
                 [SPOT_ID: <number>]
                 [PROCEDURE: <step_1>, <step_2>, ...]
