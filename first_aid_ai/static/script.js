@@ -25,6 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const humanBodySvg = document.getElementById('human-body');
     const micBtn = document.getElementById('mic-btn');
     const speakerToggle = document.getElementById('speaker-toggle');
+    const inventoryToggleBtn = document.getElementById('inventory-toggle-btn');
+    const inventoryDrawer = document.querySelector('.bottom-discovery');
+    const proceduresPanel = document.querySelector('.upper-actions');
 
     // UI Elements
     const displayAge = document.getElementById('display-age');
@@ -280,8 +283,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Send Message
     async function sendMessage() {
-        const text = messageInput.value.trim();
-        const manualKey = apiKeyInput.value.trim();
+        const text = messageInput?.value.trim() || '';
+        const manualKey = apiKeyInput?.value.trim() || '';
         const pAge = document.getElementById('patient-age')?.value || 'N/A';
         const pGender = document.getElementById('patient-gender')?.value || 'N/A';
         const pLocation = document.getElementById('patient-location')?.value || 'N/A';
@@ -396,18 +399,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    if (inventoryToggleBtn) {
+        inventoryToggleBtn.addEventListener('click', () => {
+            inventoryDrawer.classList.toggle('drawer-hidden');
+            inventoryToggleBtn.classList.toggle('active');
+
+            // Toggle icon
+            const chevron = inventoryToggleBtn.querySelector('.chevron');
+            if (inventoryToggleBtn.classList.contains('active')) {
+                chevron.textContent = '▼';
+            } else {
+                chevron.textContent = '▲';
+            }
+        });
+    }
+
     function updateProcedures(procStr) {
         actionsContent.innerHTML = '';
         if (procStr) {
-            procStr.split(',').forEach(step => {
+            // Expand panel
+            if (proceduresPanel) proceduresPanel.classList.add('expanded-view');
+
+            const steps = procStr.split(',');
+            steps.forEach((step, index) => {
                 const div = document.createElement('div');
-                div.className = 'action-step';
+                div.className = 'action-step stagger-item';
                 div.textContent = step.trim();
+                div.style.animationDelay = `${index * 0.2}s`;
                 actionsContent.appendChild(div);
             });
         } else {
+            if (proceduresPanel) proceduresPanel.classList.remove('expanded-view');
             actionsContent.innerHTML = '<div class="empty-state">No specific procedures identified.</div>';
         }
+    }
+
+    // Collapse procedures when typing
+    if (messageInput) {
+        messageInput.addEventListener('focus', () => {
+            if (proceduresPanel) proceduresPanel.classList.remove('expanded-view');
+        });
     }
 
     function updateDiscovery(searchStr) {

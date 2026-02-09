@@ -53,17 +53,23 @@
                 </div>
             </div>
 
-            <div class="panel-section bottom-discovery">
-                <div class="panel-header">
-                    <h3>⚕️ Doctor's Inventory</h3>
+            <div class="bottom-drawer-container">
+                <div class="panel-section bottom-discovery drawer-hidden">
+                    <div class="panel-header">
+                        <h3>⚕️ Doctor's Inventory</h3>
+                    </div>
+                    <div id="inventory-list" class="panel-content inventory-list">
+                        <!-- Inventory items will be loaded here -->
+                    </div>
+                    <div class="inventory-controls">
+                        <input type="text" id="inventory-input" placeholder="Add medicine/equipment...">
+                        <button id="add-inventory-btn">Add</button>
+                    </div>
                 </div>
-                <div id="inventory-list" class="panel-content inventory-list">
-                    <!-- Inventory items will be loaded here -->
-                </div>
-                <div class="inventory-controls">
-                    <input type="text" id="inventory-input" placeholder="Add medicine/equipment...">
-                    <button id="add-inventory-btn">Add</button>
-                </div>
+                <button id="inventory-toggle-btn" class="drawer-toggle-btn">
+                    <span class="btn-icon">📦</span> Doctor's Inventory
+                    <span class="chevron">▲</span>
+                </button>
             </div>
         </aside>
 
