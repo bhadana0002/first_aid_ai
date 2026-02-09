@@ -19,12 +19,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const captureBtn = document.getElementById('capture-btn');
 
     const languageSelect = document.getElementById('language-select');
-    const togglePatientDataBtn = document.getElementById('toggle-patient-data');
     const patientDataForm = document.getElementById('patient-data-form');
-    // Voice Elements
+    const savePatientBtn = document.getElementById('save-patient-btn');
+    const bodyVizContainer = document.getElementById('body-viz-container');
+    const humanBodySvg = document.getElementById('human-body');
     const micBtn = document.getElementById('mic-btn');
     const speakerToggle = document.getElementById('speaker-toggle');
-    const micIcon = micBtn.querySelector('.mic-icon');
 
     // UI Elements
     const displayAge = document.getElementById('display-age');
@@ -107,77 +107,81 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify(data)
             });
             loadInventory();
-
-            // --- Voice Interactivity (STT & TTS) ---
-            let recognition = null;
-            let isListening = false;
-            let isSpeakerOn = false;
-
-            // Check Support
-            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                recognition = new (window.webkitSpeechRecognition || window.SpeechRecognition)();
-                recognition.continuous = false;
-                recognition.interimResults = false;
-
-                recognition.onstart = () => {
-                    isListening = true;
-                    micBtn.classList.add('recording');
-                    micBtn.style.background = 'var(--primary)';
-                    micBtn.style.color = 'white';
-                };
-
-                recognition.onend = () => {
-                    isListening = false;
-                    micBtn.classList.remove('recording');
-                    micBtn.style.background = 'var(--surface)';
-                    micBtn.style.color = 'var(--primary)';
-                };
-
-                recognition.onresult = (event) => {
-                    const transcript = event.results[0][0].transcript;
-                    messageInput.value = transcript;
-                    messageInput.focus();
-                };
-
-                recognition.onerror = (event) => {
-                    console.error('Speech error:', event.error);
-                    isListening = false;
-                    micBtn.classList.remove('recording');
-                };
-            } else {
-                micBtn.style.display = 'none'; // Hide if not supported
-            }
-
-            // Language Map
-            const langMap = {
-                'English': 'en-US', 'Hindi': 'hi-IN', 'Bengali': 'bn-IN',
-                'Marathi': 'mr-IN', 'Telugu': 'te-IN', 'Tamil': 'ta-IN',
-                'Gujarati': 'gu-IN', 'Kannada': 'kn-IN', 'Malayalam': 'ml-IN'
-            };
-
-            micBtn.addEventListener('click', () => {
-                if (!recognition) return;
-                if (isListening) recognition.stop();
-                else {
-                    recognition.lang = langMap[languageSelect.value] || 'en-US';
-                    recognition.start();
-                }
-            });
-
-            speakerToggle.addEventListener('click', () => {
-                isSpeakerOn = !isSpeakerOn;
-                speakerToggle.textContent = isSpeakerOn ? '🔊' : '🔇';
-            });
-
-            function speakText(text) {
-                if (!isSpeakerOn) return;
-                window.speechSynthesis.cancel(); // Stop previous
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = langMap[languageSelect.value] || 'en-US';
-                window.speechSynthesis.speak(utterance);
-            }
         }
     });
+
+    // --- Voice Interactivity (STT & TTS) ---
+    let recognition = null;
+    let isListening = false;
+    let isSpeakerOn = false;
+
+    // Check Support
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        recognition = new (window.webkitSpeechRecognition || window.SpeechRecognition)();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+
+        recognition.onstart = () => {
+            isListening = true;
+            micBtn.classList.add('recording');
+            micBtn.style.background = 'var(--primary)';
+            micBtn.style.color = 'white';
+        };
+
+        recognition.onend = () => {
+            isListening = false;
+            micBtn.classList.remove('recording');
+            micBtn.style.background = 'var(--surface)';
+            micBtn.style.color = 'var(--primary)';
+        };
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            messageInput.value = transcript;
+            messageInput.focus();
+        };
+
+        recognition.onerror = (event) => {
+            console.error('Speech error:', event.error);
+            isListening = false;
+            micBtn.classList.remove('recording');
+        };
+    } else if (micBtn) {
+        micBtn.style.display = 'none'; // Hide if not supported
+    }
+
+    // Language Map
+    const langMap = {
+        'English': 'en-US', 'Hindi': 'hi-IN', 'Bengali': 'bn-IN',
+        'Marathi': 'mr-IN', 'Telugu': 'te-IN', 'Tamil': 'ta-IN',
+        'Gujarati': 'gu-IN', 'Kannada': 'kn-IN', 'Malayalam': 'ml-IN'
+    };
+
+    if (micBtn) {
+        micBtn.addEventListener('click', () => {
+            if (!recognition) return;
+            if (isListening) recognition.stop();
+            else {
+                recognition.lang = langMap[languageSelect.value] || 'en-US';
+                recognition.start();
+            }
+        });
+    }
+
+    if (speakerToggle) {
+        speakerToggle.addEventListener('click', () => {
+            isSpeakerOn = !isSpeakerOn;
+            speakerToggle.textContent = isSpeakerOn ? '🔊' : '🔇';
+        });
+    }
+
+    function speakText(text) {
+        if (!isSpeakerOn) return;
+        window.speechSynthesis.cancel(); // Stop previous
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = langMap[languageSelect.value] || 'en-US';
+        window.speechSynthesis.speak(utterance);
+    }
 
     loadInventory();
 
@@ -218,12 +222,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 'image/jpeg');
     });
 
-    // Toggle Patient Form
-    togglePatientDataBtn.addEventListener('click', () => {
-        patientDataForm.classList.toggle('active');
-        togglePatientDataBtn.textContent = patientDataForm.classList.contains('active')
-            ? '❌ Hide Patient Details'
-            : '📋 Manage Patient Details';
+    // Confirm Patient Details
+    savePatientBtn.addEventListener('click', () => {
+        const age = document.getElementById('patient-age').value;
+        const gender = document.getElementById('patient-gender').value;
+
+        if (!age || gender === 'N/A') {
+            alert("Please provide Age and Gender to unlock the visualization.");
+            return;
+        }
+
+        bodyVizContainer.classList.remove('locked');
+        bodyVizContainer.style.filter = 'none';
+        bodyVizContainer.style.pointerEvents = 'auto';
+
+        savePatientBtn.textContent = "✅ Profile Confirmed";
+        savePatientBtn.style.background = "#22c55e";
+
+        displayAge.textContent = `Age: ${age}`;
+        displayGender.textContent = `Gender: ${gender}`;
+
+        // Ensure the overlay is hidden
+        const overlay = bodyVizContainer.querySelector('.locked-overlay');
+        if (overlay) overlay.style.display = 'none';
     });
 
     // Auto-resize textarea
@@ -265,6 +286,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const pGender = document.getElementById('patient-gender').value || 'N/A';
 
         if (!text && !currentFile) return;
+
+        // Trigger Flying Text Animation
+        if (text) {
+            await animateFlyingText(text);
+        }
 
         appendMessage(text, 'user');
 
@@ -343,11 +369,28 @@ document.addEventListener('DOMContentLoaded', () => {
     function moveIndicator(spotId) {
         const target = document.querySelector(`.spot-node[data-id="${spotId}"]`);
         const dot = document.getElementById('target-indicator-solid');
+
         if (target && dot) {
-            dot.setAttribute('cx', target.getAttribute('cx'));
-            dot.setAttribute('cy', target.getAttribute('cy'));
+            const cx = parseFloat(target.getAttribute('cx'));
+            const cy = parseFloat(target.getAttribute('cy'));
+
+            dot.setAttribute('cx', cx);
+            dot.setAttribute('cy', cy);
             dot.style.visibility = 'visible';
-            activePartDisplay.textContent = `Active Area: ${target.getAttribute('title')}`;
+            activePartDisplay.textContent = `Target: ${target.getAttribute('title')}`;
+
+            // 3D Zoom Logic
+            // Calculate offset to center the spot in zoomed view
+            // SVG width 200, height 500. Center is (100, 250)
+            const zx = (100 - cx) * 2; // exaggerated for zoom
+            const zy = (250 - cy) * 2;
+
+            humanBodySvg.style.setProperty('--zx', `${zx}px`);
+            humanBodySvg.style.setProperty('--zy', `${zy}px`);
+
+            humanBodySvg.classList.remove('zoom-active');
+            void humanBodySvg.offsetWidth; // trigger reflow
+            humanBodySvg.classList.add('zoom-active');
         }
     }
 
@@ -449,5 +492,43 @@ document.addEventListener('DOMContentLoaded', () => {
     function removeLoading(id) {
         const el = document.getElementById(id);
         if (el) el.remove();
+    }
+
+    // Flying Text Animation Logic
+    async function animateFlyingText(text) {
+        return new Promise((resolve) => {
+            const container = document.querySelector('.input-container');
+            const rect = container.getBoundingClientRect();
+            const words = text.split(' ');
+
+            words.forEach((word, i) => {
+                const fragment = document.createElement('div');
+                fragment.className = 'text-fragment fragment-animate';
+                fragment.textContent = word;
+
+                // Starting position (input area)
+                fragment.style.left = `${rect.left + (rect.width / 2)}px`;
+                fragment.style.top = `${rect.top}px`;
+
+                // Random destination & rotation
+                const tx = (Math.random() - 0.5) * 400; // spread
+                const ty = -(window.innerHeight * 0.7 + Math.random() * 100); // fly up
+                const rot = (Math.random() - 0.5) * 90;
+
+                fragment.style.setProperty('--tx', `${tx}px`);
+                fragment.style.setProperty('--ty', `${ty}px`);
+                fragment.style.setProperty('--rot', `${rot}deg`);
+
+                // Staggered start
+                fragment.style.animationDelay = `${i * 0.05}s`;
+
+                document.body.appendChild(fragment);
+
+                // Cleanup
+                setTimeout(() => fragment.remove(), 1200);
+            });
+
+            setTimeout(resolve, 800); // Wait for most fragments to fly up
+        });
     }
 });
